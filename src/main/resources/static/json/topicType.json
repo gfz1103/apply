@@ -1,0 +1,21 @@
+[{
+	"topicType": 1,
+	"typeName": "热点"
+}, {
+	"topicType": 2,
+	"typeName": "财经"
+}
+, {
+	"topicType": 3,
+	"typeName": "区块链"
+}
+, {
+	"topicType": 4,
+	"typeName": "体育"
+}
+, {
+	"topicType": 99,
+	"typeName": "已结算"
+}
+
+]

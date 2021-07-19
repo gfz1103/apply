@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 门诊_门诊医生组套明细 -->
+<mapper namespace="com.buit.apply.dao.OpZt02Dao">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        JLBH as jlbh,ZTBH as ztbh,YPZH as ypzh,XMBH as xmbh,XMMC as xmmc,XMSL as xmsl,JB as jb,YCJL as ycjl,SYPC as sypc,MRCS as mrcs,YYTS as yyts,GYTJ as gytj,YPSL as ypsl,JZ as jz
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO OP_ZT02 (
+            JLBH ,
+            ZTBH ,
+            YPZH ,
+            XMBH ,
+            XMMC ,
+            XMSL ,
+            JB ,
+            YCJL ,
+            SYPC ,
+            MRCS ,
+            YYTS ,
+            GYTJ ,
+            YPSL ,
+            JZ ,
+            FYDJ ,
+            JZLSH
+        ) VALUES (
+            #{jlbh} ,
+            #{ztbh} ,
+            #{ypzh} ,
+            #{xmbh} ,
+            #{xmmc} ,
+            #{xmsl} ,
+            #{jb} ,
+            #{ycjl} ,
+            #{sypc} ,
+            #{mrcs} ,
+            #{yyts} ,
+            #{gytj} ,
+            #{ypsl} ,
+            #{jz} ,
+            #{fydj},
+            #{jzlsh}
+        )
+    </insert>
+
+    <update id="update" ><!--
+        UPDATE OP_ZT02 SET
+            ZTBH = #{ztbh} ,
+            YPZH = #{ypzh} ,
+            XMBH = #{xmbh} ,
+            XMMC = #{xmmc} ,
+            XMSL = #{xmsl} ,
+            YCJL = #{ycjl} ,
+            SYPC = #{sypc} ,
+            MRCS = #{mrcs} ,
+            YYTS = #{yyts} ,
+            GYTJ = #{gytj} ,
+            YPSL = #{ypsl} ,
+            JZ = #{jz}
+        WHERE
+            JLBH = #{jlbh}
+            -->
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM OP_ZT02 WHERE
+        JLBH = #{jlbh}
+    </delete>
+
+    <delete id="removeByEntity">
+        DELETE FROM OP_ZT02 <include refid="where"/>
+    </delete>
+    <delete id="deleteByZtbh">
+        DELETE FROM OP_ZT02 where ZTBH = #{ztbh}
+    </delete>
+
+    <select id="getById" resultType="OpZt02">
+        SELECT <include refid="columns" />
+            FROM OP_ZT02
+            WHERE
+        JLBH = #{jlbh}
+    </select>
+
+    <sql id="where">
+        <where>
+<!--                <if test="@sqlt.Ognl@isNotEmpty(jlbh)"> -->
+<!--                     AND JLBH = #{jlbh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(ztbh)"> -->
+<!--                     AND ZTBH = #{ztbh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(ypzh)"> -->
+<!--                     AND YPZH = #{ypzh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(xmbh)"> -->
+<!--                     AND XMBH = #{xmbh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(xmmc)"> -->
+<!--                     AND XMMC = #{xmmc} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(xmsl)"> -->
+<!--                     AND XMSL = #{xmsl} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(ycjl)"> -->
+<!--                     AND YCJL = #{ycjl} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(sypc)"> -->
+<!--                     AND SYPC = #{sypc} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(mrcs)"> -->
+<!--                     AND MRCS = #{mrcs} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(yyts)"> -->
+<!--                     AND YYTS = #{yyts} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(gytj)"> -->
+<!--                     AND GYTJ = #{gytj} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(ypsl)"> -->
+<!--                     AND YPSL = #{ypsl} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(jz)"> -->
+<!--                     AND JZ = #{jz} -->
+<!--                </if> -->
+        </where>
+    </sql>
+
+    <select id="findByEntityCount" resultType="Integer">
+        SELECT count(*) FROM OP_ZT02
+        <include refid="where"/>
+    </select>
+
+    <select id="findByEntity" resultType="OpZt02">
+        SELECT <include refid="columns" />
+        FROM OP_ZT02
+        <include refid="where"/>
+
+        <if test="@sqlt.Ognl@orderIsNotEmpty(sortColumns)">
+            ORDER BY ${sortColumns}
+        </if>
+    </select>
+    <!--     业务sql      -->
+    <select id="findByZtbh" resultType="com.buit.apply.response.OpZt02Resp">
+        SELECT
+            ys.JLBH AS jlbh,
+            ys.ZTBH AS ztbh,
+            ys.YPZH AS ypzh,
+            ys.XMBH AS xmbh,
+            ys.XMMC AS xmmc,
+            ys.XMSL AS xmsl,
+            ys.JB AS jb,
+            ys.YCJL AS ycjl,
+            yk.JLDW AS jldw,
+            yk.JYLX AS jylx,
+            ys.MRCS AS mrcs,
+            ys.YYTS AS yyts,
+            ys.GYTJ AS gytj,
+            ys.SYPC AS sypc,
+            ys.YPSL AS ypsl,
+            ys.JZ AS jz,
+            ys.fydj AS fydj,
+            yk.YPXH AS ypxh,
+            yk.YPMC AS ypmc,
+            yk.YPGG AS ypgg,
+            yk.YBFL AS ybfl,
+            yk.PSPB AS pspb
+        FROM
+            OP_ZT02 ys,
+            v_drugs_typk yk
+        WHERE
+            yk.YPXH = ys.XMBH
+            AND ZTBH = #{ztbh}
+        ORDER BY
+            YPZH,
+            JLBH
+    </select>
+
+    <select id="findByZtbhXm" resultType="com.buit.apply.response.OpZt02Resp">
+        SELECT
+            zt.JLBH AS jlbh,
+            zt.ZTBH AS ztbh,
+            zt.YPZH AS ypzh,
+            zt.XMBH AS xmbh,
+            zt.XMMC AS xmmc,
+            zt.XMSL AS xmsl,
+            zt.YCJL AS ycjl,
+            zt.SYPC AS sypc,
+            mx.FYDJ AS fydj,
+            mx.SBJG AS sbjg,
+            zt.YPSL AS ypsl,
+            zt.MRCS AS mrcs,
+            zt.YYTS AS yyts,
+            zt.GYTJ AS gytj,
+            sf.YBBM AS ybbm
+        FROM
+            OP_ZT02 zt,
+            FEE_YLSFXMDJ mx,
+            FEE_YLSFXM sf
+        WHERE
+            mx.FYXH = zt.XMBH
+            AND sf.FYXH = zt.XMBH
+            AND ZTBH = #{ztbh}
+        ORDER BY
+            YPZH,
+            JLBH
+    </select>
+    <select id="getJlbhXmbhXmslFydjSb" resultType="java.util.Map">
+        SELECT
+            a.JLBH AS jlbh,
+            a.XMBH AS xmbh,
+            a.XMSL AS fysl,
+            b.SBJG AS fydj,
+            b.FYKS AS fyks,
+            b.XMMC AS xmmc
+        FROM
+            OP_ZT02 a
+            LEFT JOIN FEE_YLSFXMDJ b ON b.FYXH = a.XMBH
+        WHERE
+            a.ZTBH = #{ztbh}
+    </select>
+    <select id="getJlbhXmbhXmslFydjFSb" resultType="java.util.Map">
+        SELECT
+            a.JLBH AS jlbh,
+            a.XMBH AS xmbh,
+            a.XMSL AS fysl,
+            b.FYDJ AS fydj,
+            b.FYKS AS fyks,
+            a.XMMC AS xmmc,
+            c.FYGB AS fygb,
+			c.XMLX AS xmlx,
+			c.mzsy AS mzsy,
+			c.zfpb AS zfpb
+        FROM
+            OP_ZT02 a
+            LEFT JOIN FEE_YLSFXMDJ b ON b.FYXH = a.XMBH
+            LEFT JOIN fee_ylsfxm c ON a.XMBH = c.FYXH
+        WHERE
+            a.ZTBH = #{ztbh}
+    </select>
+
+    <select id="getZtInfoByZtbh" parameterType="Map" resultType="java.util.Map">
+    	SELECT
+			JLBH,
+			ZTBH,
+			YPZH,
+			XMBH,
+			XMMC,
+			XMSL,
+			YCJL,
+			SYPC,
+			MRCS,
+			YYTS,
+			GYTJ
+		FROM
+			OP_ZT02
+		WHERE
+			ZTBH = #{ztbh}
+		ORDER BY
+			ZTBH
+    </select>
+
+    <!-- 住院常用药查询 -->
+    <select id="queryCommonDrugs" resultType="com.buit.apply.response.DrugsBody">
+	    	select OP_ZT02.JLBH,
+	    	OP_ZT01.ZTLB,
+	    	OP_ZT01.ZTBH,
+	    	DRUGS_TYPK.YPXH,
+	    	DRUGS_TYPK.YPMC,
+	    	DRUGS_TYPK.YPGG,
+	    	DRUGS_TYPK.YPDW,
+	    	DRUGS_TYPK.PYDM
+	  from OP_ZT02,
+	       OP_ZT01,
+        v_drugs_typk as DRUGS_TYPK
+	 where OP_ZT02.ZTBH = OP_ZT01.ZTBH
+	   and OP_ZT02.XMBH = DRUGS_TYPK.YPXH
+	   and (OP_ZT01.SSLB = 4 and OP_ZT01.YGDM = #{ygdm} or
+	       OP_ZT01.SSLB = 5 and OP_ZT01.KSDM = #{ksdm} or
+	       OP_ZT01.SSLB = 6)
+	   and OP_ZT01.ZTLB &lt; 4
+	   and OP_ZT01.SFQY = 1
+	   <if test="@sqlt.Ognl@isNotEmpty(pydm)">
+            and DRUGS_TYPK.PYDM like CONCAT(CONCAT('%',#{pydm}),'%')
+       </if>
+	   and OP_ZT01.JGID = #{jgid}
+    </select>
+
+    <!-- 住院常用项目查询 -->
+    <select id="queryCommonProject" resultType="com.buit.apply.response.OpZt02ProjectResp">
+	    	select OP_ZT02.JLBH,
+	    	OP_ZT01.ZTBH,
+	    	FEE_YLSFXM.FYXH,
+	    	FEE_YLSFXM.FYMC,
+	    	OP_ZT02.XMSL,
+	    	OP_ZT02.YCJL,
+	    	OP_ZT02.SYPC,
+	    	OP_ZT02.MRCS,
+	    	OP_ZT02.YYTS,
+	    	OP_ZT02.GYTJ,
+	    	OP_ZT01.ZTLB,
+	    	FEE_YLSFXM.PYDM
+	  from OP_ZT02,
+	       OP_ZT01,
+	       FEE_YLSFXM
+	 where OP_ZT02.ZTBH = OP_ZT01.ZTBH
+	   and OP_ZT02.XMBH = FEE_YLSFXM.FYXH
+	   and (OP_ZT01.SSLB = 4 and OP_ZT01.YGDM = #{ygdm} or
+	       OP_ZT01.SSLB = 5 and OP_ZT01.KSDM = #{ksdm} or
+	       OP_ZT01.SSLB = 6)
+	   and OP_ZT01.ZTLB &lt; 4
+	   and OP_ZT01.SFQY = 1
+	   <if test="@sqlt.Ognl@isNotEmpty(pydm)">
+            and FEE_YLSFXM.PYDM like CONCAT(CONCAT('%',#{pydm}),'%')
+       </if>
+	   and OP_ZT01.JGID = #{jgid}
+    </select>
+
+
+    <!-- 根据记录编号查询住院常用药信息 -->
+    <select id="queryCommonDrugsInfoByJlbh" resultType="java.util.HashMap">
+	    	 select OP_ZT02.JLBH as JLBH,
+			       OP_ZT02.ZTBH as ZTBH,
+			       OP_ZT02.YPZH as YPZH,
+			       DRUGS_TYPK.YPXH     as YPXH,
+			       DRUGS_TYPK.YPMC as YPMC,
+		           concat(concat(DRUGS_TYPK.YPMC,'/'), DRUGS_TYPK.YPGG) as YZMC,
+			       DRUGS_TYPK.YPGG     as YPGG,
+			       OP_ZT02.XMSL as XMSL,
+			       OP_ZT02.YCJL as YCJL,
+			       DRUGS_TYPK.JLDW     as JLDW,
+			       OP_ZT02.SYPC as SYPC,
+			       OP_ZT02.MRCS as MRCS,
+			       OP_ZT02.YYTS as YYTS,
+			       OP_ZT02.GYTJ as GYTJ,
+			       OP_ZT02.YPSL as YPSL,
+			       DRUGS_TYPK.YBFL     as YBFL,
+			       OP_ZT02.JZ   as JZ,
+			       DRUGS_TYPK.YPJL as YPJL
+			  from OP_ZT02 , V_DRUGS_TYPK as DRUGS_TYPK
+			 where OP_ZT02.XMBH = DRUGS_TYPK.YPXH
+			 <if test="@sqlt.Ognl@isNotEmpty(jlbh)">
+            	and OP_ZT02.JLBH = #{jlbh}
+       		 </if>
+   			 <if test="@sqlt.Ognl@isNotEmpty(ztbh)">
+            	and OP_ZT02.ZTBH = #{ztbh}
+       		 </if>
+       		 <if test="@sqlt.Ognl@isNotEmpty(orderBy)">
+            	order by #{orderBy}
+       		 </if>
+    </select>
+
+
+    <!-- 根据组套编号查询医嘱项目组套信息 -->
+    <select id="queryProjectPackageInfoByZtbh" resultType="java.util.HashMap">
+	    	select b.FYXH as FYXH,
+		       a.XMMC as YZMC,
+		       a.XMSL as XMSL,
+		       a.YPZH as YPZH,
+		       <choose>
+		            <when test="@sqlt.Ognl@isNotEmpty(brxz) and brxz == 6024 ">
+		                c.SBJG as FYDJ,
+		            </when>
+		            <otherwise>
+		            	c.FYDJ as FYDJ,
+		            </otherwise>
+			   </choose>
+		       b.FYGB as FYGB,
+		       b.FYDW as FYDW,
+		       b.XMLX as XMLX,
+		       c.FYKS as FYKS,
+		       a.SYPC as SYPC,
+		       b.ZYSY as ZYSY,
+		       b.YJSY as YJSY,
+		       c.ZFPB as ZFPB
+		  from OP_ZT02 a, FEE_YLSFXM b, FEE_YLSFXMDJ c
+		 where a.XMBH = b.FYXH
+		   AND b.FYXH = c.FYXH
+		   <if test="@sqlt.Ognl@isNotEmpty(ZTBH)">
+            	and a.ZTBH = #{ZTBH}
+   		   </if>
+   		   <if test="@sqlt.Ognl@isNotEmpty(JLBHS)">
+            	and a.JLBH in (${JLBHS})
+   		   </if>
+		   and c.JGID = #{JGID}
+		 ORDER BY a.YPZH, a.JLBH
+    </select>
+
+    <!-- 查询组套项目明细信息 -->
+    <select id="queryPackageDetailsByZtbh" resultType="java.util.HashMap">
+	    	select a.XMBH as XMBH,
+	    		   a.XMMC as YZMC,
+	    		   a.XMSL as XMSL,
+	    		   <choose>
+			            <when test="@sqlt.Ognl@isNotEmpty(brxz) and brxz == 6024 ">
+			                b.SBJG as FYDJ,
+			            </when>
+			            <otherwise>
+			            	b.FYDJ as FYDJ
+			            </otherwise>
+    				</choose>
+			  from OP_ZT02 a, FEE_YLSFXMDJ b
+			 where a.xmbh = b.fyxh
+			   and a.ztbh = #{ztbh}
+    </select>
+    <select id="getYpZtInfoByZtbh" resultType="java.util.Map">
+        SELECT
+            a.JLBH as jlbh,
+            a.ZTBH as ztbh,
+            a.YPZH as ypzh,
+            b.YPXH as ypxh,
+            b.YPMC as ypmc,
+            b.YPGG as ypgg,
+            a.XMSL as xmsl,
+            a.JB as jb,
+            a.YCJL as ycjl,
+            b.JLDW as jldw,
+            a.SYPC as sypc,
+            a.MRCS as mrcs,
+            a.YYTS as yyts,
+            a.GYTJ as gytj,
+            a.YPSL as ypsl,
+            b.YBFL as ybfl,
+            a.JZ as jz
+        FROM
+            OP_ZT02 a,
+            V_DRUGS_TYPK b
+        WHERE
+            b.YPXH = a.XMBH
+            <if test="@sqlt.Ognl@isNotEmpty(ztbh)">
+                AND a.ZTBH = #{ztbh}
+            </if>
+            <if test="@sqlt.Ognl@isNotEmpty(jlbh)">
+                AND a.JLBH = #{jlbh}
+            </if>
+        ORDER BY
+            ZTBH
+    </select>
+    <select id="queryYjZtMx" resultType="java.util.Map">
+        <choose>
+            <when test="@sqlt.Ognl@isNotEmpty(brxz) and brxz == 6024 ">
+                select distinct a.jlbh as jlbh,a.ztbh as ztbh,b.fyxh as fyxh,a.xmmc as xmmc,a.xmsl as xmsl,a.ypzh as ypzh,c.sbjg as fydj,b.fygb as fygb,b.fydw as fydw,b.xmlx as xmlx,c.fyks as fyks,b.mzsy as mzsy,c.xzsy as xzsy,c.xzts as xzts,c.xzcs as xzcs,c.zfpb as zfpb
+            </when>
+            <otherwise>
+                select distinct b.ybbm as ybbm,a.jlbh as jlbh,a.ztbh as ztbh,b.fyxh as fyxh,a.xmmc as xmmc,a.xmsl as xmsl,a.ypzh as ypzh,c.fydj as fydj,b.fygb as fygb,b.fydw as fydw,b.xmlx as xmlx,c.fyks as fyks,b.mzsy as mzsy,c.xzsy as xzsy,c.xzts as xzts,c.xzcs as xzcs,c.zfpb as zfpb
+            </otherwise>
+        </choose>
+        from
+            OP_ZT02 a,FEE_YLSFXM b,FEE_YLSFXMDJ c
+        where
+            a.XMBH = b.FYXH
+            AND  b.FYXH = c.FYXH
+            AND a.ZTBH = #{ztbh}
+            AND c.JGID = #{jgid}
+        ORDER BY a.JLBH
+
+    </select>
+
+    <!-- 根据组套编号查询明细  -->
+	<select id="queryDetailByZtbh" resultType="com.buit.apply.response.OpZt02DetailResp">
+        select c.YBBM as YBBM, a.XMBH as FYXH, a.XMMC as FYMC, b.FYDJ as FYDJ
+		  from OP_ZT02 a, FEE_YLSFXMDJ b, FEE_YLSFXM c
+		 where b.FYXH = c.FYXH
+		   and a.XMBH = b.FYXH
+		   and b.ZFPB = 0
+		   and a.ZTBH = #{ztbh}
+    </select>
+
+    <select id="queryXmbhYzmcFydj" resultType="java.util.Map">
+        SELECT
+            a.XMBH AS xmbh,
+            a.xmmc AS yzmc,
+            a.xmsl AS xmsl,
+            <choose>
+                <when test="@sqlt.Ognl@isNotEmpty(brxz) and brxz == 6024 ">
+                    b.SBJG AS fydj
+                </when>
+                <otherwise>
+                    b.FYDJ as fydj
+                </otherwise>
+            </choose>
+        FROM
+            OP_ZT02 a,
+            FEE_YLSFXMDJ b
+        WHERE
+            a.xmbh = b.fyxh
+            AND a.ztbh = #{ztbh}
+    </select>
+
+</mapper>
+

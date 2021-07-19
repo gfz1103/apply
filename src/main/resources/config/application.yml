@@ -1,0 +1,17 @@
+nacos:
+  config:
+    bootstrap:
+      enable: true
+    namespace: ${nacos.public.common}
+    server-addr: ${nacos.server.url}
+    dataIds: application,datasource-config,rabbitmq-config,redis-config,file-config,dubbo-config
+    type: yaml
+    username: ${nacos.username}
+    password: ${nacos.password}
+    ext-config:
+      - namespace: ${nacos.service}
+        server-addr: ${nacos.server.url}
+        dataId: apply-service
+        type: yaml
+        username: ${nacos.username}
+        password: ${nacos.password}

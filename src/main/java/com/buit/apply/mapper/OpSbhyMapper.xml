@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 设备号源表 -->
+<mapper namespace="com.buit.apply.dao.OpSbhyDao">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        HYID as hyid,BHID as bhid,HYRQ as hyrq,HYSJ as hysj,SDID as sdid,SFYY as sfyy,SFDJ as sfdj,DJYS as djys
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO OP_SBHY (
+            HYID ,
+            BHID ,
+            HYRQ ,
+            HYSJ ,
+            SDID ,
+            SFYY ,
+            SFDJ ,
+            DJYS 
+        ) VALUES (
+            #{hyid} ,
+            #{bhid} ,
+            #{hyrq} ,
+            #{hysj} ,
+            #{sdid} ,
+            #{sfyy} ,
+            #{sfdj} ,
+            #{djys} 
+        )
+    </insert>
+    
+    <update id="update" ><!--  
+        UPDATE OP_SBHY SET
+            BHID = #{bhid} ,
+            HYRQ = #{hyrq} ,
+            HYSJ = #{hysj} ,
+            SDID = #{sdid} ,
+            SFYY = #{sfyy} ,
+            SFDJ = #{sfdj} ,
+            DJYS = #{djys} 
+        WHERE 
+            HYID = #{hyid} 
+            -->            
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM OP_SBHY WHERE
+        HYID = #{hyid} 
+    </delete>
+    
+    <delete id="removeByEntity">
+        DELETE FROM OP_SBHY <include refid="where"/>  
+    </delete>
+    
+    <select id="getById" resultType="OpSbhy">
+        SELECT <include refid="columns" />
+            FROM OP_SBHY 
+            WHERE 
+        HYID = #{hyid} 
+    </select>
+    
+    <sql id="where">
+        <where>                          
+<!--                <if test="@sqlt.Ognl@isNotEmpty(hyid)"> -->
+<!--                     AND HYID = #{hyid} -->
+<!--                </if> -->
+                <if test="@sqlt.Ognl@isNotEmpty(bhid)"> 
+                     AND BHID = #{bhid} 
+                </if> 
+<!--                <if test="@sqlt.Ognl@isNotEmpty(hyrq)"> -->
+<!--                     AND HYRQ = #{hyrq} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(hysj)"> -->
+<!--                     AND HYSJ = #{hysj} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(sdid)"> -->
+<!--                     AND SDID = #{sdid} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(sfyy)"> -->
+<!--                     AND SFYY = #{sfyy} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(sfdj)"> -->
+<!--                     AND SFDJ = #{sfdj} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(djys)"> -->
+<!--                     AND DJYS = #{djys} -->
+<!--                </if> -->
+        </where>
+    </sql>
+        
+    <select id="findByEntityCount" resultType="long">
+        SELECT count(*) FROM OP_SBHY 
+        <include refid="where"/>    
+    </select>
+    
+    <select id="findByEntity" resultType="OpSbhy">
+        SELECT <include refid="columns" />
+        FROM OP_SBHY 
+        <include refid="where"/>
+        
+        <if test="@sqlt.Ognl@orderIsNotEmpty(sortColumns)">
+            ORDER BY ${sortColumns}
+        </if>
+    </select>
+    <!--     业务sql      -->
+    <select id="getHyInfo" resultType="java.util.Map">
+        SELECT
+            A.HYID AS hyid,
+            A.HYRQ AS hyrq,
+            A.HYSJ AS hysj,
+            B.BHID AS bhid,
+            B.SBBH AS sbbh,
+            B.SBMC AS sbmc,
+            B.SBDZ AS sbdz
+        FROM
+            OP_SBHY A
+            LEFT JOIN OP_SBBH B ON B.BHID = A.BHID
+        WHERE
+            A.SFYY = 0
+            AND SFDJ = 0
+            AND B.JKLX = #{JKLX}
+            AND concat( A.HYRQ, ' ' , A.HYSJ) >= #{HYRQ}
+        ORDER by
+            A.HYRQ,
+            A.HYSJ
+    </select>
+    <select id="queryYysjView" resultType="com.buit.apply.response.QueryYysjViewResp">
+        SELECT
+            A.HYID AS HYID,
+            A.BHID AS BHID,
+            A.HYRQ AS HYRQ,
+            A.HYSJ AS HYSJ,
+            A.SDID AS SDID,
+            A.SFYY AS SFYY,
+            A.SFDJ AS SFDJ,
+            A.DJYS AS DJYS,
+            B.SBDZ AS SBDZ
+        FROM
+            OP_SBHY A
+            LEFT JOIN OP_SBBH B ON B.BHID = A.BHID
+        WHERE
+            A.SFYY = 0
+            AND SFDJ = 0
+            AND B.JKLX = #{jclx}
+            AND DATE_FORMAT(A.HYRQ,'%Y-%m-%d') = #{hyrq}
+            <if test="@sqlt.Ognl@isNotEmpty(hysj)">
+                AND HYSJ >= #{hysj}
+            </if>
+        ORDER BY
+            A.HYRQ,
+            A.HYSJ
+    </select>
+    <update id="freezeSbhh">
+        UPDATE OP_SBHY
+        SET SFDJ = 1,
+            DJYS = #{djys}
+        WHERE
+            HYID = #{hyid}
+    </update>
+    <update id="updateSfyy">
+        UPDATE OP_SBHY
+        SET SFYY = 1
+        WHERE
+            HYID = #{hyid}
+    </update>
+    <update id="unfreeze">
+        UPDATE OP_SBHY
+        SET SFDJ = 0,
+        DJYS = '',
+        SFYY = 0
+        WHERE
+            HYID = #{hyid}
+    </update>
+    
+    <!-- 释放检查浩源 -->
+	<update id="updateNumSourceByJlxh">
+		update OP_SBHY set SFYY = 0, SFDJ = 0,DJYS = NULL 
+		where HYID = (select jc.HYID from CIS_HZYZ_ZT zt ,CIS_JCSQ01 jc 
+		where zt.SQID = jc.JCXH and zt.JLXH = #{jlxh})
+	</update>
+    <update id="unfreezeSbhh">
+        update OP_SBHY set SFDJ=0,DJYS='' where HYID = #{hyid}
+    </update>
+    <update id="updateSfyySfdjDjys">
+        UPDATE OP_SBHY
+        SET SFYY = 0,
+        SFDJ = 0,
+        DJYS = NULL
+        WHERE
+            HYID =(
+            SELECT
+                jc.HYID
+            FROM
+                OP_YJCF01 yj,
+                CIS_JCSQ01 jc
+            WHERE
+            yj.SQID = jc.JCXH
+            AND yj.YJXH = #{yjxh})
+    </update>
+    <select id="queryRecentTimeByHyrq" resultType="com.buit.apply.response.QueryRecentTimeByHyrqResp">
+        SELECT
+            A.HYID AS HYID,
+            A.HYRQ AS HYRQ,
+            A.HYSJ AS HYSJ,
+            B.BHID AS BHID,
+            B.SBBH AS SBBH,
+            B.SBMC AS SBMC,
+            B.SBDZ AS SBDZ
+        FROM
+            OP_SBHY A
+            LEFT JOIN OP_SBBH B ON B.BHID = A.BHID
+        WHERE
+            A.SFYY = 0
+            AND SFDJ = 0
+            AND B.JKLX = #{jklx}
+            AND A.HYRQ = #{hyrq}
+            <if test="@sqlt.Ognl@isNotEmpty(nowTime)">
+                AND A.HYSJ >= #{nowTime}
+            </if>
+        ORDER BY
+            A.HYRQ,
+            A.HYSJ
+    </select>
+    <select id="queryYyqk" resultType="java.util.Map">
+        SELECT
+            CONCAT( 't_', a.SDID, '_',( SELECT jklx FROM OP_SBBH WHERE a.BHID = bhid ),'_',a.BHID) AS id,
+            count( a.HYID ) AS value
+        FROM
+            OP_SBHY a,
+            CIS_JCSQ01 b
+            LEFT JOIN MPI_BRDA brda ON b.brid = brda.brid
+        WHERE
+            a.HYRQ >= #{data}
+            AND #{data1} >= a.HYRQ
+            AND a.HYID = b.HYID
+            <if test="@sqlt.Ognl@isNotEmpty(brxm)">
+                AND brda.brxm LIKE #{brxm}
+            </if>
+            <if test="@sqlt.Ognl@isNotEmpty(jczt)">
+                and b.JCZT>2
+            </if>
+        GROUP BY
+            a.SDID,
+            a.BHID
+    </select>
+    <select id="queryKyy" resultType="java.util.Map">
+        SELECT
+            CONCAT('t_kyyrc_' ,( SELECT jklx FROM OP_SBBH WHERE h.BHID = bhid ), '_' , h.BHID) AS id,
+            count( h.HYID ) AS  value
+        FROM
+            OP_SBHY h
+        WHERE
+            h.HYRQ >= #{data}
+            AND #{data1} >= h.HYRQ
+        GROUP BY
+            h.BHID
+    </select>
+    <select id="queryYyy" resultType="java.util.Map">
+        SELECT
+            CONCAT('t_yyyrc_' ,( SELECT jklx FROM OP_SBBH WHERE a.BHID = bhid ), '_' , a.BHID) AS id,
+            count( a.HYID ) AS value
+        FROM
+            OP_SBHY a
+        WHERE
+            a.HYRQ >= #{data}
+            AND #{data1} >= a.HYRQ
+            AND EXISTS ( SELECT 1 FROM CIS_JCSQ01 b WHERE a.HYID = b.HYID )
+        GROUP BY
+            a.BHID
+    </select>
+    
+    <!-- 根据申请id释放检查浩源 -->
+	<update id="updateNumSourceBySqid">
+		update OP_SBHY set SFYY = 0, SFDJ = 0,DJYS = NULL 
+		where HYID = (select distinct jc.HYID from CIS_HZYZ_ZT zt ,CIS_JCSQ01 jc 
+		where zt.SQID = jc.JCXH and zt.SQID = #{sqid} and zt.YZLX = #{yzlx})
+	</update>
+
+</mapper>
+

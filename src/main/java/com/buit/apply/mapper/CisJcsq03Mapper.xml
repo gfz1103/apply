@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 检查申请送检标本表 -->
+<mapper namespace="com.buit.apply.dao.CisJcsq03Dao">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        JCSQSJID as jcsqsjid,JGID as jgid,JCXH as jcxh,SJBB as sjbb,CQBW as cqbw,BBMC as bbmc
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO CIS_JCSQ03 (
+            JCSQSJID ,
+            JGID ,
+            JCXH ,
+            SJBB ,
+            CQBW ,
+            BBMC
+        ) VALUES (
+            #{jcsqsjid} ,
+            #{jgid} ,
+            #{jcxh} ,
+            #{sjbb} ,
+            #{cqbw} ,
+            #{bbmc}
+        )
+    </insert>
+
+    <update id="update" ><!--
+        UPDATE CIS_JCSQ03 SET
+            JGID = #{jgid} ,
+            JCXH = #{jcxh} ,
+            SJBB = #{sjbb} ,
+            CQBW = #{cqbw} ,
+            BBMC = #{bbmc}
+        WHERE
+            JCSQSJID = #{jcsqsjid}
+            -->
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM CIS_JCSQ03 WHERE
+        JCSQSJID = #{jcsqsjid}
+    </delete>
+
+    <delete id="removeByEntity">
+        DELETE FROM CIS_JCSQ03 <include refid="where"/>
+    </delete>
+
+    <select id="getById" resultType="CisJcsq03">
+        SELECT <include refid="columns" />
+            FROM CIS_JCSQ03
+            WHERE
+        JCSQSJID = #{jcsqsjid}
+    </select>
+
+    <sql id="where">
+        <where>
+<!--                <if test="@sqlt.Ognl@isNotEmpty(jcsqsjid)"> -->
+<!--                     AND JCSQSJID = #{jcsqsjid} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(jgid)"> -->
+<!--                     AND JGID = #{jgid} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(jcxh)"> -->
+<!--                     AND JCXH = #{jcxh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(sjbb)"> -->
+<!--                     AND SJBB = #{sjbb} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(cqbw)"> -->
+<!--                     AND CQBW = #{cqbw} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(bbmc)"> -->
+<!--                     AND BBMC = #{bbmc} -->
+<!--                </if> -->
+        </where>
+    </sql>
+
+    <select id="findByEntityCount" resultType="long">
+        SELECT count(*) FROM CIS_JCSQ03
+        <include refid="where"/>
+    </select>
+
+    <select id="findByEntity" resultType="CisJcsq03">
+        SELECT <include refid="columns" />
+        FROM CIS_JCSQ03
+        <include refid="where"/>
+
+        <if test="@sqlt.Ognl@orderIsNotEmpty(sortColumns)">
+            ORDER BY ${sortColumns}
+        </if>
+    </select>
+    <!--     业务sql      -->
+    <select id="queryCisJcsq03ByJcxh" resultType="com.buit.apply.model.CisJcsq03">
+        SELECT <include refid="columns" />
+        FROM CIS_JCSQ03
+        where JCXH = #{jcxh} and JGID = #{jgid}
+    </select>
+
+    <select id="getsjbb" resultType="com.buit.apply.response.BbDataResponse">
+        SELECT sjbb,cqbw,bbmc
+        FROM CIS_JCSQ03
+        where JCXH = #{jcxh}
+    </select>
+    
+    <delete id="deleteByJcxh">
+        delete from cis_jcsq03 where
+        jcxh = #{jcxh} and jgid = #{jgid}
+    </delete>
+    
+</mapper>
+

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 检查申请单明细 -->
+<mapper namespace="com.buit.apply.dao.CisJcsq02Dao">
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        JCXH as jcxh,FYXH as fyxh,FYDJ as fydj
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO CIS_JCSQ02 (
+            JCXH ,
+            FYXH ,
+            FYDJ
+        ) VALUES (
+            #{jcxh} ,
+            #{fyxh} ,
+            #{fydj}
+        )
+    </insert>
+
+    <update id="update" ><!--
+        UPDATE CIS_JCSQ02 SET
+            FYXH = #{fyxh} ,
+            FYDJ = #{fydj}
+        WHERE
+            JCXH = #{jcxh}
+            -->
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM CIS_JCSQ02 WHERE
+        JCXH = #{jcxh}
+    </delete>
+
+    <delete id="removeByEntity">
+        DELETE FROM CIS_JCSQ02 <include refid="where"/>
+    </delete>
+
+    <select id="getById" resultType="CisJcsq02">
+        SELECT <include refid="columns" />
+            FROM CIS_JCSQ02
+            WHERE
+        JCXH = #{jcxh}
+    </select>
+
+    <sql id="where">
+        <where>
+                <if test="@sqlt.Ognl@isNotEmpty(jcxh)">
+                     AND JCXH = #{jcxh}
+                </if>
+<!--                <if test="@sqlt.Ognl@isNotEmpty(fyxh)"> -->
+<!--                     AND FYXH = #{fyxh} -->
+<!--                </if> -->
+<!--                <if test="@sqlt.Ognl@isNotEmpty(fydj)"> -->
+<!--                     AND FYDJ = #{fydj} -->
+<!--                </if> -->
+        </where>
+    </sql>
+
+    <select id="findByEntityCount" resultType="long">
+        SELECT count(*) FROM CIS_JCSQ02
+        <include refid="where"/>
+    </select>
+
+    <select id="findByEntity" resultType="CisJcsq02">
+        SELECT <include refid="columns" />
+        FROM CIS_JCSQ02
+        <include refid="where"/>
+
+        <if test="@sqlt.Ognl@orderIsNotEmpty(sortColumns)">
+            ORDER BY ${sortColumns}
+        </if>
+    </select>
+    <!--     业务sql      -->
+
+    <!-- 查询检查申请单诊疗项目信息 -->
+    <select id="queryYsJcDicZlxmInfo" resultType="com.buit.apply.response.CisJcsq02ZlxmResp">
+	        SELECT a.JCXH as JCXH,
+				a.FYXH as FYXH,
+				a.FYDJ as FYDJ,
+				b.XMMC as XMMC,
+				b.YJLX as YJLX,
+				b.JCZQTYS as JCZQTYS,
+				b.ZYSX as ZYSX,
+				b.ZXKS as ZXKS
+			FROM
+				CIS_JCSQ02 a,
+				DIC_ZLXM b
+			WHERE a.FYXH = b.ZLXMID
+			and a.JCXH = #{jcxh}
+			and b.JGID = #{jgid}
+    </select>
+
+    <select id="getJcxmData" resultType="com.buit.apply.response.JcxmDataResponse">
+        SELECT
+			b.XMMC as XMMC
+		FROM
+			CIS_JCSQ02 a,
+			DIC_ZLXM b
+		WHERE a.FYXH = b.ZLXMID
+			and a.JCXH = #{jcxh}
+    </select>
+
+    <delete id="deleteByJcxh">
+        delete from CIS_JCSQ02 where
+        jcxh = #{jcxh}
+    </delete>
+
+    <delete id="deleteByJcxhAndFyxh">
+        delete from CIS_JCSQ02 where
+        jcxh = #{jcxh} and fyxh =#{fyxh}
+    </delete>
+
+    <select id="selectJcsq02" resultType="java.lang.Integer">
+        select count(*) from CIS_JCSQ02 where  jcxh = #{jcxh}
+    </select>
+</mapper>
+

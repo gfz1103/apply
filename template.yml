@@ -1,0 +1,33 @@
+version: '3'
+services:
+  apply-service:
+    image: ${image}
+    ports:
+      - "8080"
+      - "${bindPort}:20880"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 500M
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: fluentd-log.com:24224
+        tag: "${env}.apply-service"
+    env_file:
+      - env.conf
+    networks:
+      - his-net
+    environment:
+      - VIRTUAL_HOST=${host}
+      - VIRTUAL_PORT=8080
+      - DUBBO_IP_TO_REGISTRY=${ip}
+      - DUBBO_PORT_TO_REGISTRY=${bindPort}
+    extra_hosts:
+      - "blueuninfo-nacos.com:${nacosUrl}"
+      - "fluentd-log.com:${fluentdUrl}"
+networks:
+  his-net:
+    external: true
